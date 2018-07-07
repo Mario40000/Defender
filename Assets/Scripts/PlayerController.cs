@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
     private float nextFire;
-
+    
     public float speed;
     public Boundary boundary;
     public float tilt;
@@ -23,7 +23,11 @@ public class PlayerController : MonoBehaviour
     public GameObject basicBolt;
     public Transform mainCannon1;
     public Transform mainCannon2;
+    public GameObject muzzle1;
+    public GameObject muzzle2;
+
     public float fireRate;
+    public float muzzleTime;
 
 	// Use this for initialization
 	void Start ()
@@ -36,9 +40,12 @@ public class PlayerController : MonoBehaviour
         //Disparamos los cañones si ha pasado el tiempo minimo
         if (Input.GetButton("Jump") & Time.time > nextFire)
         {
+            StartCoroutine(Muzzler());
             nextFire = Time.time + fireRate;
             Instantiate(basicBolt, mainCannon1.position, mainCannon1.rotation);
             Instantiate(basicBolt, mainCannon2.position, mainCannon2.rotation);
+
+            
         }
         
     }
@@ -61,5 +68,14 @@ public class PlayerController : MonoBehaviour
 
         //hacemos que nuestra nave alabee ligeramente
         rb.rotation = Quaternion.Euler(0.0f, 90f, rb.velocity.y * tilt);
+    }
+
+    public IEnumerator Muzzler()
+    {
+        muzzle1.SetActive(true);
+        muzzle2.SetActive(true);
+        yield return new WaitForSeconds(muzzleTime);
+        muzzle1.SetActive(false);
+        muzzle2.SetActive(false);
     }
 }
