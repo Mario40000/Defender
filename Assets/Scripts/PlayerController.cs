@@ -14,17 +14,34 @@ public class PlayerController : MonoBehaviour
     //Variables
 
     private Rigidbody rb;
+    private float nextFire;
 
     public float speed;
     public Boundary boundary;
     public float tilt;
+
+    public GameObject basicBolt;
+    public Transform mainCannon1;
+    public Transform mainCannon2;
+    public float fireRate;
 
 	// Use this for initialization
 	void Start ()
     {
         rb = GetComponent<Rigidbody>();
 	}
-	
+
+    private void Update()
+    {
+        //Disparamos los cañones si ha pasado el tiempo minimo
+        if (Input.GetButton("Jump") & Time.time > nextFire)
+        {
+            nextFire = Time.time + fireRate;
+            Instantiate(basicBolt, mainCannon1.position, mainCannon1.rotation);
+            Instantiate(basicBolt, mainCannon2.position, mainCannon2.rotation);
+        }
+        
+    }
 
     private void FixedUpdate()
     {
