@@ -26,7 +26,9 @@ public class PlayerController : MonoBehaviour
     public Transform mainCannon1;
     public Transform mainCannon2;
     public GameObject muzzle1;
-    public GameObject muzzle2; 
+    public GameObject muzzle2;
+    public GameObject weapon1;
+    public GameObject weapon2;
 
     public float fireRate;
     public float muzzleTime;
@@ -40,11 +42,21 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        //Encender motor con el power de velocidad
         if(speed < StaticData.shipSpeed)
         {
             StartCoroutine(PowerEngineOn());
         }
         speed = StaticData.shipSpeed;
+        fireRate = StaticData.shipFireRate;
+
+        //Conectamos un skin de arma u otra segun el nivel del power
+        if(fireRate < 0.2)
+        {
+            weapon1.SetActive(false);
+            weapon2.SetActive(true);
+            muzzleTime = 0.5f;
+        }
         //Disparamos los cañones si ha pasado el tiempo minimo
         if (Input.GetButton("Jump") & Time.time > nextFire)
         {
