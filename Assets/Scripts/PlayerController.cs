@@ -15,16 +15,18 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
     private float nextFire;
-    
+
+    public GameObject engine;
     public float speed;
     public Boundary boundary;
     public float tilt;
+    public float engineTime;
 
     public GameObject basicBolt;
     public Transform mainCannon1;
     public Transform mainCannon2;
     public GameObject muzzle1;
-    public GameObject muzzle2;
+    public GameObject muzzle2; 
 
     public float fireRate;
     public float muzzleTime;
@@ -32,11 +34,17 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
+        speed = StaticData.shipSpeed;
         rb = GetComponent<Rigidbody>();
 	}
 
     private void Update()
     {
+        if(speed < StaticData.shipSpeed)
+        {
+            StartCoroutine(PowerEngineOn());
+        }
+        speed = StaticData.shipSpeed;
         //Disparamos los cañones si ha pasado el tiempo minimo
         if (Input.GetButton("Jump") & Time.time > nextFire)
         {
@@ -70,6 +78,7 @@ public class PlayerController : MonoBehaviour
         rb.rotation = Quaternion.Euler(0.0f, 90f, rb.velocity.y * tilt);
     }
 
+    //Efecto de fogonazo al disparar
     public IEnumerator Muzzler()
     {
         muzzle1.SetActive(true);
@@ -78,4 +87,13 @@ public class PlayerController : MonoBehaviour
         muzzle1.SetActive(false);
         muzzle2.SetActive(false);
     }
+
+    //Efecto de motor al aumentar la velocidad
+    public IEnumerator PowerEngineOn()
+    {
+        engine.SetActive(true);
+        yield return new WaitForSeconds(engineTime);
+        engine.SetActive(false);
+    }
+
 }
